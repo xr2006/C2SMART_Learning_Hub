@@ -7,6 +7,6 @@ This repo contains a demo of building multinomial logit (MNL), mixed logit (MXL)
 #### Reference
 Ren, X., & Chow, J. Y. (2022). A random-utility-consistent machine learning method to estimate agents’ joint activity scheduling choice from a ubiquitous data set. Transportation Research Part B: Methodological, 166, 396-418.
 
-1)	Ren, X., Chow, J. Y., Bansal P. (2025). Estimating a k-modal nonparametric mixed logit model with market-level data, Transportation Research Part B: Methodological, accepted. https://arxiv.org/abs/2309.13159
+Ren, X., Chow, J. Y., Bansal P. (2025). Estimating a k-modal nonparametric mixed logit model with market-level data, Transportation Research Part B: Methodological, accepted. https://arxiv.org/abs/2309.13159
 
 <img src="image/AMXL_out_of_sample_accuracy.jpg" style="width:100%">
