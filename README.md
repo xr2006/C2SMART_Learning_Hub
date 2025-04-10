@@ -15,7 +15,11 @@ Ren, X., Chow, J. Y., & Guan, C. (2024). Mobility service design with equity-awa
 <img src="image/AMXL_out_of_sample_accuracy.jpg" style="width:100%">
 
 
+
+
 <img src="image/OD_data.jpg" style="width:100%">
+
+
 
 
 <img src="image/system_optimization.jpg" style="width:100%">
