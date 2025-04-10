@@ -4,3 +4,5 @@ matplotlib==3.10.1
 cvxpy==1.6.4
 xlogit==0.2.7
 sklearn==0.0
+folium==0.19.5
+geopandas==1.0.1
