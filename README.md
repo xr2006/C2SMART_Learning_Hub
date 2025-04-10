@@ -9,4 +9,7 @@ Ren, X., & Chow, J. Y. (2022). A random-utility-consistent machine learning meth
 
 Ren, X., Chow, J. Y., Bansal P. (2025). Estimating a k-modal nonparametric mixed logit model with market-level data, Transportation Research Part B: Methodological, accepted. https://arxiv.org/abs/2309.13159
 
+Ren, X., Chow, J. Y., & Guan, C. (2024). Mobility service design with equity-aware choice-based decision-support tool: New York case study. Transportation Research Part D: Transport and Environment, 132, 104255.
+
+
 <img src="image/AMXL_out_of_sample_accuracy.jpg" style="width:100%">
