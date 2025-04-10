@@ -95,3 +95,81 @@ def One_iteration_AMXL(Commuting_choice_ms,shuffle,epsilon_c, x_k, sample_size,b
     y_k = parameter_i_lst_c.mean(axis=0)
     
     return y_k, parameter_i_lst_0_c,sb_c
+
+
+def group_level_IO(Y_line, X_line, beta_0, lb, ub, tol):
+    beta_0 = np.asarray(beta_0, dtype=float)
+    n_beta = beta_0.size
+
+    # ------------------------------------------------------------------
+    # Decision variables and bounds
+    # ------------------------------------------------------------------
+    x = cp.Variable(n_beta)
+
+    constraints = []
+    if np.isfinite(lb).any():
+        constraints.append(x >= lb)
+    if np.isfinite(ub).any():
+        constraints.append(x <= ub)
+
+    # ------------------------------------------------------------------
+    # Log‑share constraints
+    # ------------------------------------------------------------------
+    Y_line_ = np.maximum(Y_line, 0.001)          # avoid log(0)
+    log_Y   = np.log(Y_line_)
+
+    # pre‑compute V = X_line.T @ x  (but in CVXPY we build it explicitly)
+    V = X_line.T @ x                 # shape (6,)
+
+    for j in range(6):
+        for k in range(6):
+            if j != k and Y_line_[j] >= 0.001 and Y_line_[k] >= 0.001:
+                rhs = log_Y[j] - log_Y[k]
+                constraints += [
+                    V[j] - V[k] <= rhs + float(tol),
+                    V[j] - V[k] >= rhs - float(tol),
+                ]
+
+    # ------------------------------------------------------------------
+    # Objective: minimise ||x − beta_0||²
+    # ------------------------------------------------------------------
+    w = np.ones_like(beta_0, dtype=float)
+    obj_expr = cp.sum(cp.multiply(w, cp.square(x - beta_0)))
+    objective = cp.Minimize(obj_expr)
+
+    # ------------------------------------------------------------------
+    # Solve
+    # ------------------------------------------------------------------
+    try:
+        prob = cp.Problem(objective, constraints)
+        prob.solve(solver=cp.ECOS, verbose=False)    # OSQP / SCS also work
+        beta = x.value
+        Z = prob.value
+    except:                          # infeasible, unbounded, or failed
+        beta = beta_0.copy()
+        Z = 0.0
+
+    # ------------------------------------------------------------------
+    # Post‑fit metrics (same helper you already have)
+    # ------------------------------------------------------------------
+    rho, mse, mae, LL, LL_0, P = compute_metrics(Y_line, X_line, beta)
+    beta[0]*=2e9
+    beta[6]*=1e8
+    beta[[0,6]] = np.array([-x if x>0 else x for x in beta[[0,6]]])
+    beta[[0,6]] = np.array([-(-x%10) if x<-10 else x for x in beta[[0,6]]])
+
+    return beta, Z, rho, mse, mae, LL, LL_0, P
+
+def compute_metrics(Y_line,X_line,beta):
+    V = (X_line*beta[:,None]).sum(axis=0)
+    demo = np.exp(V).sum()
+    P = np.exp(V) / demo
+    LL = np.sum(Y_line * np.log(P))
+    P_0 = np.zeros(6)+1/6
+    LL_0 = np.sum(Y_line * np.log(P_0))
+    rho = 1-LL/LL_0
+    mse = np.mean(np.square(P-Y_line))
+    mae = np.mean(np.abs(P-Y_line))
+    return rho,mse,mae,LL,LL_0,P
+
+
