@@ -142,7 +142,7 @@ def group_level_IO(Y_line, X_line, beta_0, lb, ub, tol):
     # ------------------------------------------------------------------
     try:
         prob = cp.Problem(objective, constraints)
-        prob.solve(solver=cp.ECOS, verbose=False)    # OSQP / SCS also work
+        prob.solve(verbose=False)    # OSQP / SCS also work
         beta = x.value
         Z = prob.value
     except:                          # infeasible, unbounded, or failed
